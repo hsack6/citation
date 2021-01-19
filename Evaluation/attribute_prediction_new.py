@@ -7,7 +7,7 @@ import re
 import os
 import copy
 import sys
-from statistics import mean
+from statistics import mean, median
 
 sns.set(style='darkgrid')
 sns.set_style(style='whitegrid')
@@ -25,11 +25,12 @@ EXIST_TABLE = np.load(MakeSample_attribute_prediction_new_InputDir + '/exist_tab
 from setting_param import Evaluation_attribute_prediction_new_Baseline_InputDir as Baseline_InputDir
 from setting_param import Evaluation_attribute_prediction_new_FNN_InputDir as FNN_InputDir
 from setting_param import Evaluation_attribute_prediction_new_DeepMatchMax_InputDir as DeepMatchMax_InputDir
+from setting_param import Evaluation_attribute_prediction_new_PROSER_selecter_InputDir as PROSER_InputDir
 
 from setting_param import Evaluation_attribute_prediction_new_OutputDir as OutputDir
 
-InputDirs = [Baseline_InputDir, FNN_InputDir, DeepMatchMax_InputDir]
-methods = ['Baseline', 'FNN', 'DeepMatchMax']
+InputDirs = [Baseline_InputDir, FNN_InputDir, DeepMatchMax_InputDir, PROSER_InputDir]
+methods = ['Baseline', 'FNN', 'DeepMatchMax', 'PROSER']
 os.makedirs(OutputDir, exist_ok=True)
 
 def load_paths_from_dir(dir_path):
@@ -110,6 +111,7 @@ def BipartiteMatching(new_vec_dic, teacher_vec_dic):
 def calc_metrics(new_paths, teacher_paths, new_num_paths, teacher_num_paths, target_idx):
     gain_mean = 0
     gain_min = 0
+    gain_median = 0
     gain_max = 0
     new_ls = []
     teacher_ls = []
@@ -135,20 +137,23 @@ def calc_metrics(new_paths, teacher_paths, new_num_paths, teacher_num_paths, tar
             score.append(similarity_matrix[node_pair_list[i]])
         gain_mean += mean(score)
         gain_min += min(score)
+        gain_median += median(score)
         gain_max += max(score)
 
     gain_mean /= len(target_idx)
     gain_min /= len(target_idx)
+    gain_median /= len(target_idx)
     gain_max /= len(target_idx)
 
-    return gain_mean, gain_min, gain_max
+    return gain_mean, gain_min, gain_median, gain_max
 
 def get_performance(InputDir, is_train, is_valid, is_test):
     new_paths, teacher_paths, new_num_paths, teacher_num_paths = data_split(InputDir)
     n_samples = len(new_paths)
     all_idx = list(range(n_samples))
-    dev_idx, test_idx = dev_test_split(all_idx, n_samples, ratio_test)
-    train_idx, valid_idx = dev_test_split(dev_idx, n_samples, ratio_valid)
+    train_idx = all_idx[-18:-4]
+    valid_idx = all_idx[-4:-2]
+    test_idx = all_idx[-2:]
 
     if is_train:
         target_idx = train_idx
@@ -157,13 +162,13 @@ def get_performance(InputDir, is_train, is_valid, is_test):
     elif is_test:
         target_idx = test_idx
 
-    gain_mean, gain_min, gain_max = calc_metrics(new_paths, teacher_paths, new_num_paths, teacher_num_paths, target_idx)
+    gain_mean, gain_min, gain_median, gain_max = calc_metrics(new_paths, teacher_paths, new_num_paths, teacher_num_paths, target_idx)
 
-    return gain_mean, gain_min, gain_max
+    return gain_mean, gain_min, gain_median, gain_max
 
 # Loss
 for idx, method in enumerate(methods):
-    if method == 'Baseline':
+    if method == 'Baseline' or method == 'PROSER':
         continue
     InputDir = InputDirs[idx]
     loss = pd.read_csv(InputDir + '/loss.csv')
@@ -183,34 +188,37 @@ for idx, method in enumerate(methods):
     plt.savefig(OutputDir + '/' + method + '_loss.pdf')
 
 # train
-result_dic = {'Method':[], 'Gain_mean':[], 'Gain_min':[], 'Gain_max':[]}
+result_dic = {'Method':[], 'Gain_mean':[], 'Gain_min':[], 'Gain_median':[], 'Gain_max':[]}
 for idx, method in enumerate(methods):
     InputDir = InputDirs[idx]
-    gain_mean, gain_min, gain_max = get_performance(InputDir, True, False, False)
+    gain_mean, gain_min, gain_median, gain_max = get_performance(InputDir, True, False, False)
     result_dic['Method'].append(method)
     result_dic['Gain_mean'].append(gain_mean)
     result_dic['Gain_min'].append(gain_min)
+    result_dic['Gain_median'].append(gain_median)
     result_dic['Gain_max'].append(gain_max)
 pd.DataFrame(result_dic).to_csv(OutputDir + '/performance_train.csv')
 
 # valid
-result_dic = {'Method':[], 'Gain_mean':[], 'Gain_min':[], 'Gain_max':[]}
+result_dic = {'Method':[], 'Gain_mean':[], 'Gain_min':[], 'Gain_median':[], 'Gain_max':[]}
 for idx, method in enumerate(methods):
     InputDir = InputDirs[idx]
-    gain_mean, gain_min, gain_max = get_performance(InputDir, False, True, False)
+    gain_mean, gain_min, gain_median, gain_max = get_performance(InputDir, False, True, False)
     result_dic['Method'].append(method)
     result_dic['Gain_mean'].append(gain_mean)
     result_dic['Gain_min'].append(gain_min)
+    result_dic['Gain_median'].append(gain_median)
     result_dic['Gain_max'].append(gain_max)
 pd.DataFrame(result_dic).to_csv(OutputDir + '/performance_valid.csv')
 
 # test
-result_dic = {'Method':[], 'Gain_mean':[], 'Gain_min':[], 'Gain_max':[]}
+result_dic = {'Method':[], 'Gain_mean':[], 'Gain_min':[], 'Gain_median':[], 'Gain_max':[]}
 for idx, method in enumerate(methods):
     InputDir = InputDirs[idx]
-    gain_mean, gain_min, gain_max = get_performance(InputDir, False, False, True)
+    gain_mean, gain_min, gain_median, gain_max = get_performance(InputDir, False, False, True)
     result_dic['Method'].append(method)
     result_dic['Gain_mean'].append(gain_mean)
     result_dic['Gain_min'].append(gain_min)
+    result_dic['Gain_median'].append(gain_median)
     result_dic['Gain_max'].append(gain_max)
 pd.DataFrame(result_dic).to_csv(OutputDir + '/performance_test.csv')

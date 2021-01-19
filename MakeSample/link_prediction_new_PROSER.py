@@ -31,9 +31,9 @@ from setting_param import MakeSample_link_prediction_new_DeepMatchMax_OutputDir 
 from setting_param import MakeSample_link_prediction_new_FNN_OutputDir as FNN_OutputDir
 from setting_param import MakeSample_link_prediction_new_PROSER_OutputDir as PROSER_OutputDir
 
-Method_list = ["Baseline", "DeepMatchMax", "FNN", "PROSER"]
-Out_InputDir_list = [Baseline_Out_InputDir, DeepMatchMax_Out_InputDir, FNN_Out_InputDir, PROSER_Out_InputDir]
-OutputDir_list = [Baseline_OutputDir, DeepMatchMax_OutputDir, FNN_OutputDir, PROSER_OutputDir]
+Method_list = ["PROSER"]
+Out_InputDir_list = [PROSER_Out_InputDir]
+OutputDir_list = [PROSER_OutputDir]
 
 from setting_param import ratio_test
 from setting_param import ratio_valid
@@ -41,7 +41,8 @@ from setting_param import L
 from setting_param import attribute_dim
 
 os.makedirs(OutputDir, exist_ok=True)
-learning_type = ["mix", "learning", "inference"]
+#learning_type = ["mix", "learning", "inference"]
+learning_type = ["inference"]
 for OutputDir_ in OutputDir_list:
     os.makedirs(OutputDir_, exist_ok=True)
     for l_type in learning_type:
@@ -157,7 +158,7 @@ def get_expanded_mask_matrix_learning(ts, L, expanded_idx_dic, n_node, n_expande
 
 def get_expanded_node_attribute_inference(ts, L, n_node, n_expanded, new):
     node_attribute = NodeAttribute(ts)
-    # node_attribute[sorted(GetNodes(ts, L, 'new'))] = 0
+    node_attribute[sorted(GetNodes(ts, L, 'new'))] = 0
     new_node_attribute = new
 
     expanded_attribute = np.zeros((n_node + n_expanded, NodeAttribute(ts).shape[1]))
@@ -187,6 +188,7 @@ def get_expanded_label_matrix_inference(ts, L, expanded_idx_dic, n_node, n_expan
     G = nx.Graph(list(expanded_edges))
     A = np.array(nx.to_numpy_matrix(G, nodelist=[i for i in range(n_node + n_expanded)]))
     return A
+
 
 def get_expanded_mask_matrix_inference(ts, L, expanded_idx_dic, n_node, n_expanded):
     expanded_matrix = np.zeros((n_node + n_expanded, n_node + n_expanded))
@@ -277,11 +279,8 @@ for method_idx, OutputDir in enumerate(OutputDir_list):
         Model_Out_InputDir)
     n_samples = len(new_paths)
     all_idx = list(range(n_samples))
-    # dev_idx, test_idx = dev_test_split(all_idx, len(all_idx), ratio_test)
-    # train_idx, valid_idx = train_valid_split(dev_idx, len(all_idx), ratio_valid)
-    train_idx = all_idx[:-4]
-    valid_idx = all_idx[-4:-2]
-    test_idx = all_idx[-2:]
+    dev_idx, test_idx = dev_test_split(all_idx, n_samples, ratio_test)
+    train_idx, valid_idx = dev_test_split(dev_idx, n_samples, ratio_valid)
 
     for ts in range(L, EXIST_TABLE.shape[1] - L):
         ts_train, ts_test, ts_all = TsSplit(ts, L)
@@ -301,6 +300,7 @@ for method_idx, OutputDir in enumerate(OutputDir_list):
         assert new.shape[0] == max_predicted_new_node_num, 'reference error'
         assert teacher.shape[0] == max_new_node_num, 'reference error'
 
+        """
         # 学習用
         # expanded_idx_dic = {teacher : expanded_new}
         # expanded_new = n_node + teacher_idx
@@ -326,6 +326,7 @@ for method_idx, OutputDir in enumerate(OutputDir_list):
             np.save(OutputDir + "/mix/input/" + str(ts), node_attribute)
             mmwrite(OutputDir + "/mix/label/" + str(ts), label)
             mmwrite(OutputDir + "/mix/mask/" + str(ts), mask)
+        """
 
         # 推論用
         # expanded_idx_dic = {teacher : list(expanded_new)}
@@ -336,7 +337,7 @@ for method_idx, OutputDir in enumerate(OutputDir_list):
             new_node = int(node_pair_list[new_row, 0])
             expanded_idx_dic[teacher_node].append(n_node + new_node)
         # input
-        node_attribute = get_expanded_node_attribute_inference(ts_train[-1], L, n_node, n_expanded, new)
+        node_attribute = get_expanded_node_attribute_inference(ts_test, L, n_node, n_expanded, new)
         # label
         label = get_expanded_label_matrix_inference(ts_test, L, expanded_idx_dic, n_node, n_expanded)
         # mask
@@ -348,9 +349,12 @@ for method_idx, OutputDir in enumerate(OutputDir_list):
         np.save(OutputDir + "/inference/input/" + str(ts), node_attribute)
         mmwrite(OutputDir + "/inference/label/" + str(ts), label)
         mmwrite(OutputDir + "/inference/mask/" + str(ts), mask)
+
+        """
         # mix 用 推論時は予測されたデータ
         idx = all_idx[ts - L]
         if idx in test_idx:
             np.save(OutputDir + "/mix/input/" + str(ts), node_attribute)
             mmwrite(OutputDir + "/mix/label/" + str(ts), label)
             mmwrite(OutputDir + "/mix/mask/" + str(ts), mask)
+        """

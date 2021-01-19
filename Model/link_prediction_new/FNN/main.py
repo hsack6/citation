@@ -4,8 +4,9 @@ import pandas as pd
 
 import torch
 import torch.nn as nn
+import torch.optim as optim
 
-from model import COSSIMMLP
+from model import FNN
 from utils.train import train
 from utils.valid import valid
 from utils.test import test
@@ -35,21 +36,21 @@ from setting_param import Model_link_prediction_new_PROSER_mix_InputDir as PROSE
 from setting_param import Model_link_prediction_new_PROSER_learning_InputDir as PROSER_learning_InputDir
 from setting_param import Model_link_prediction_new_PROSER_inference_InputDir as PROSER_inference_InputDir
 
-from setting_param import Model_link_prediction_new_COSSIMMLP_Baseline_mix_OutputDir as COSSIMMLP_Baseline_mix_OutputDir
-from setting_param import Model_link_prediction_new_COSSIMMLP_Baseline_learning_OutputDir as COSSIMMLP_Baseline_learning_OutputDir
-from setting_param import Model_link_prediction_new_COSSIMMLP_Baseline_inference_OutputDir as COSSIMMLP_Baseline_inference_OutputDir
+from setting_param import Model_link_prediction_new_FNN_Baseline_mix_OutputDir as FNN_Baseline_mix_OutputDir
+from setting_param import Model_link_prediction_new_FNN_Baseline_learning_OutputDir as FNN_Baseline_learning_OutputDir
+from setting_param import Model_link_prediction_new_FNN_Baseline_inference_OutputDir as FNN_Baseline_inference_OutputDir
 
-from setting_param import Model_link_prediction_new_COSSIMMLP_DeepMatchMax_mix_OutputDir as COSSIMMLP_DeepMatchMax_mix_OutputDir
-from setting_param import Model_link_prediction_new_COSSIMMLP_DeepMatchMax_learning_OutputDir as COSSIMMLP_DeepMatchMax_learning_OutputDir
-from setting_param import Model_link_prediction_new_COSSIMMLP_DeepMatchMax_inference_OutputDir as COSSIMMLP_DeepMatchMax_inference_OutputDir
+from setting_param import Model_link_prediction_new_FNN_DeepMatchMax_mix_OutputDir as FNN_DeepMatchMax_mix_OutputDir
+from setting_param import Model_link_prediction_new_FNN_DeepMatchMax_learning_OutputDir as FNN_DeepMatchMax_learning_OutputDir
+from setting_param import Model_link_prediction_new_FNN_DeepMatchMax_inference_OutputDir as FNN_DeepMatchMax_inference_OutputDir
 
-from setting_param import Model_link_prediction_new_COSSIMMLP_FNN_mix_OutputDir as COSSIMMLP_FNN_mix_OutputDir
-from setting_param import Model_link_prediction_new_COSSIMMLP_FNN_learning_OutputDir as COSSIMMLP_FNN_learning_OutputDir
-from setting_param import Model_link_prediction_new_COSSIMMLP_FNN_inference_OutputDir as COSSIMMLP_FNN_inference_OutputDir
+from setting_param import Model_link_prediction_new_FNN_FNN_mix_OutputDir as FNN_FNN_mix_OutputDir
+from setting_param import Model_link_prediction_new_FNN_FNN_learning_OutputDir as FNN_FNN_learning_OutputDir
+from setting_param import Model_link_prediction_new_FNN_FNN_inference_OutputDir as FNN_FNN_inference_OutputDir
 
-from setting_param import Model_link_prediction_new_COSSIMMLP_PROSER_mix_OutputDir as COSSIMMLP_PROSER_mix_OutputDir
-from setting_param import Model_link_prediction_new_COSSIMMLP_PROSER_learning_OutputDir as COSSIMMLP_PROSER_learning_OutputDir
-from setting_param import Model_link_prediction_new_COSSIMMLP_PROSER_inference_OutputDir as COSSIMMLP_PROSER_inference_OutputDir
+from setting_param import Model_link_prediction_new_FNN_PROSER_mix_OutputDir as FNN_PROSER_mix_OutputDir
+from setting_param import Model_link_prediction_new_FNN_PROSER_learning_OutputDir as FNN_PROSER_learning_OutputDir
+from setting_param import Model_link_prediction_new_FNN_PROSER_inference_OutputDir as FNN_PROSER_inference_OutputDir
 
 from setting_param import link_prediction_new_worker
 from setting_param import link_prediction_new_batchSize
@@ -59,7 +60,7 @@ from setting_param import link_prediction_new_annotation_dim
 from setting_param import link_prediction_new_state_dim
 from setting_param import link_prediction_new_output_dim
 from setting_param import link_prediction_new_n_steps
-from setting_param import link_prediction_new_niter
+from setting_param import link_prediction_new_niter_FNN
 from setting_param import link_prediction_new_patience
 
 parser = argparse.ArgumentParser()
@@ -69,7 +70,7 @@ parser.add_argument('--state_dim', type=int, default=link_prediction_new_state_d
 parser.add_argument('--annotation_dim', type=int, default=link_prediction_new_annotation_dim, help='GGNN input annotation size')
 parser.add_argument('--output_dim', type=int, default=link_prediction_new_output_dim, help='Model output state size')
 parser.add_argument('--init_L', type=int, default=link_prediction_new_init_L, help='number of observation time step')
-parser.add_argument('--niter', type=int, default=link_prediction_new_niter, help='number of epochs to train for')
+parser.add_argument('--niter', type=int, default=link_prediction_new_niter_FNN, help='number of epochs to train for')
 parser.add_argument('--n_steps', type=int, default=link_prediction_new_n_steps, help='propogation steps number of GGNN')
 parser.add_argument('--patience', type=int, default=link_prediction_new_patience, help='Early stopping patience')
 parser.add_argument('--lr', type=float, default=link_prediction_new_lr, help='learning rate')
@@ -91,43 +92,43 @@ torch.manual_seed(opt.manualSeed)
 if opt.out_input_method == "Baseline":
     if opt.learning_type == "mix":
         InputDir = Baseline_mix_InputDir
-        OutputDir = COSSIMMLP_Baseline_mix_OutputDir
+        OutputDir = FNN_Baseline_mix_OutputDir
     elif opt.learning_type == "learning":
         InputDir = Baseline_learning_InputDir
-        OutputDir = COSSIMMLP_Baseline_learning_OutputDir
+        OutputDir = FNN_Baseline_learning_OutputDir
     elif opt.learning_type == "inference":
         InputDir = Baseline_inference_InputDir
-        OutputDir = COSSIMMLP_Baseline_inference_OutputDir
+        OutputDir = FNN_Baseline_inference_OutputDir
 elif opt.out_input_method == "DeepMatchMax":
     if opt.learning_type == "mix":
         InputDir = DeepMatchMax_mix_InputDir
-        OutputDir = COSSIMMLP_DeepMatchMax_mix_OutputDir
+        OutputDir = FNN_DeepMatchMax_mix_OutputDir
     elif opt.learning_type == "learning":
         InputDir = DeepMatchMax_learning_InputDir
-        OutputDir = COSSIMMLP_DeepMatchMax_learning_OutputDir
+        OutputDir = FNN_DeepMatchMax_learning_OutputDir
     elif opt.learning_type == "inference":
         InputDir = DeepMatchMax_inference_InputDir
-        OutputDir = COSSIMMLP_DeepMatchMax_inference_OutputDir
+        OutputDir = FNN_DeepMatchMax_inference_OutputDir
 elif opt.out_input_method == "FNN":
     if opt.learning_type == "mix":
         InputDir = FNN_mix_InputDir
-        OutputDir = COSSIMMLP_FNN_mix_OutputDir
+        OutputDir = FNN_FNN_mix_OutputDir
     elif opt.learning_type == "learning":
         InputDir = FNN_learning_InputDir
-        OutputDir = COSSIMMLP_FNN_learning_OutputDir
+        OutputDir = FNN_FNN_learning_OutputDir
     elif opt.learning_type == "inference":
         InputDir = FNN_inference_InputDir
-        OutputDir = COSSIMMLP_FNN_inference_OutputDir
+        OutputDir = FNN_FNN_inference_OutputDir
 elif opt.out_input_method == "PROSER":
     if opt.learning_type == "mix":
         InputDir = PROSER_mix_InputDir
-        OutputDir = COSSIMMLP_PROSER_mix_OutputDir
+        OutputDir = FNN_PROSER_mix_OutputDir
     elif opt.learning_type == "learning":
         InputDir = PROSER_learning_InputDir
-        OutputDir = COSSIMMLP_PROSER_learning_OutputDir
+        OutputDir = FNN_PROSER_learning_OutputDir
     elif opt.learning_type == "inference":
         InputDir = PROSER_inference_InputDir
-        OutputDir = COSSIMMLP_PROSER_inference_OutputDir
+        OutputDir = FNN_PROSER_inference_OutputDir
 
 opt.dataroot = InputDir
 
@@ -157,7 +158,7 @@ def main(opt):
     all_dataloader = BADataloader(all_dataset, batch_size=opt.batchSize, \
                                      shuffle=False, num_workers=opt.workers, drop_last=False)
 
-    net = COSSIMMLP(opt)
+    net = FNN(opt)
     net.double()
     print(net)
 
@@ -167,8 +168,7 @@ def main(opt):
         net.cuda()
         criterion.cuda()
 
-    #optimizer = optim.Adam(net.parameters(), lr=opt.lr)
-    optimizer = ""
+    optimizer = optim.Adam(net.parameters(), lr=opt.lr)
     early_stopping = EarlyStopping(patience=opt.patience, verbose=True)
 
     os.makedirs(OutputDir, exist_ok=True)

@@ -31,10 +31,6 @@ from setting_param import Model_link_prediction_new_FNN_mix_InputDir as FNN_mix_
 from setting_param import Model_link_prediction_new_FNN_learning_InputDir as FNN_learning_InputDir
 from setting_param import Model_link_prediction_new_FNN_inference_InputDir as FNN_inference_InputDir
 
-from setting_param import Model_link_prediction_new_PROSER_mix_InputDir as PROSER_mix_InputDir
-from setting_param import Model_link_prediction_new_PROSER_learning_InputDir as PROSER_learning_InputDir
-from setting_param import Model_link_prediction_new_PROSER_inference_InputDir as PROSER_inference_InputDir
-
 from setting_param import Model_link_prediction_new_COSSIMMLP_Baseline_mix_OutputDir as COSSIMMLP_Baseline_mix_OutputDir
 from setting_param import Model_link_prediction_new_COSSIMMLP_Baseline_learning_OutputDir as COSSIMMLP_Baseline_learning_OutputDir
 from setting_param import Model_link_prediction_new_COSSIMMLP_Baseline_inference_OutputDir as COSSIMMLP_Baseline_inference_OutputDir
@@ -46,10 +42,6 @@ from setting_param import Model_link_prediction_new_COSSIMMLP_DeepMatchMax_infer
 from setting_param import Model_link_prediction_new_COSSIMMLP_FNN_mix_OutputDir as COSSIMMLP_FNN_mix_OutputDir
 from setting_param import Model_link_prediction_new_COSSIMMLP_FNN_learning_OutputDir as COSSIMMLP_FNN_learning_OutputDir
 from setting_param import Model_link_prediction_new_COSSIMMLP_FNN_inference_OutputDir as COSSIMMLP_FNN_inference_OutputDir
-
-from setting_param import Model_link_prediction_new_COSSIMMLP_PROSER_mix_OutputDir as COSSIMMLP_PROSER_mix_OutputDir
-from setting_param import Model_link_prediction_new_COSSIMMLP_PROSER_learning_OutputDir as COSSIMMLP_PROSER_learning_OutputDir
-from setting_param import Model_link_prediction_new_COSSIMMLP_PROSER_inference_OutputDir as COSSIMMLP_PROSER_inference_OutputDir
 
 from setting_param import link_prediction_new_worker
 from setting_param import link_prediction_new_batchSize
@@ -118,16 +110,6 @@ elif opt.out_input_method == "FNN":
     elif opt.learning_type == "inference":
         InputDir = FNN_inference_InputDir
         OutputDir = COSSIMMLP_FNN_inference_OutputDir
-elif opt.out_input_method == "PROSER":
-    if opt.learning_type == "mix":
-        InputDir = PROSER_mix_InputDir
-        OutputDir = COSSIMMLP_PROSER_mix_OutputDir
-    elif opt.learning_type == "learning":
-        InputDir = PROSER_learning_InputDir
-        OutputDir = COSSIMMLP_PROSER_learning_OutputDir
-    elif opt.learning_type == "inference":
-        InputDir = PROSER_inference_InputDir
-        OutputDir = COSSIMMLP_PROSER_inference_OutputDir
 
 opt.dataroot = InputDir
 
@@ -141,6 +123,7 @@ from setting_param import n_expanded
 opt.n_node = all_node_num + n_expanded
 
 def main(opt):
+    """
     train_dataset = BADataset(opt.dataroot, opt.L, True, False, False)
     train_dataloader = BADataloader(train_dataset, batch_size=opt.batchSize, \
                                       shuffle=True, num_workers=opt.workers, drop_last=True)
@@ -152,7 +135,7 @@ def main(opt):
     test_dataset = BADataset(opt.dataroot, opt.L, False, False, True)
     test_dataloader = BADataloader(test_dataset, batch_size=opt.batchSize, \
                                      shuffle=True, num_workers=opt.workers, drop_last=True)
-
+    """
     all_dataset = BADataset(opt.dataroot, opt.L, False, False, False)
     all_dataloader = BADataloader(all_dataset, batch_size=opt.batchSize, \
                                      shuffle=False, num_workers=opt.workers, drop_last=False)
@@ -177,9 +160,12 @@ def main(opt):
     test_loss_ls = []
 
     for epoch in range(0, opt.niter):
-        train_loss = train(epoch, train_dataloader, net, criterion, optimizer, opt)
-        valid_loss = valid(valid_dataloader, net, criterion, opt)
-        test_loss = test(test_dataloader, net, criterion, opt)
+        # train_loss = train(epoch, train_dataloader, net, criterion, optimizer, opt)
+        # valid_loss = valid(valid_dataloader, net, criterion, opt)
+        # test_loss = test(test_dataloader, net, criterion, opt)
+        train_loss = 0
+        valid_loss = 0
+        test_loss = 0
 
         train_loss_ls.append(train_loss)
         valid_loss_ls.append(valid_loss)

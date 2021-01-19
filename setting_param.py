@@ -3,10 +3,10 @@ L = 5
 ratio_test = 0.1
 ratio_valid = 0.2
 
-all_node_num = 99198
-n_expanded = 8871 # (MakeSample/confirm_n_expanded.pyで確認できる)
+all_node_num = 10987
+n_expanded = 1036#8871 # (MakeSample/confirm_n_expanded.pyで確認できる)
 adj_shape = (all_node_num, all_node_num * L)
-max_nnz_am = 16834 # (Model/confirm_max_nnz_amで確認できる）隣接疎行列の全サンプルにおける非ゼロ要素数の最大値
+max_nnz_am = 43588# (Model/confirm_max_nnz_amで確認できる）隣接疎行列の全サンプルにおける非ゼロ要素数の最大値
 attribute_dim = 9
 
 ######################################################################################################################
@@ -40,6 +40,7 @@ MakeSample_link_prediction_new_OutputDir = ROOT_PATH + "/data/learning_data/link
 MakeSample_link_prediction_new_Baseline_OutputDir = ROOT_PATH + "/data/learning_data/link_prediction_new/Baseline"
 MakeSample_link_prediction_new_DeepMatchMax_OutputDir = ROOT_PATH + "/data/learning_data/link_prediction_new/DeepMatchMax"
 MakeSample_link_prediction_new_FNN_OutputDir = ROOT_PATH + "/data/learning_data/link_prediction_new/FNN"
+MakeSample_link_prediction_new_PROSER_OutputDir = ROOT_PATH + "/data/learning_data/link_prediction_new/PROSER"
 
 # Model IO dir
 # prediction_num_of_edge
@@ -111,6 +112,10 @@ Model_attribute_prediction_new_PROSER_oracle_OutputDir = ROOT_PATH + "/data/resu
 Model_attribute_prediction_new_PROSER_InputDir = MakeSample_attribute_prediction_new_PROSER_OutputDir
 Model_attribute_prediction_new_PROSER_FNN_OutputDir = ROOT_PATH + "/data/learning_result/attribute_prediction_new_PROSER/FNN"
 
+# attribute_prediction_new_PROSER_selecter
+Model_attribute_prediction_new_PROSER_selecter_InputDir = ROOT_PATH + "/data/graph"
+Model_attribute_prediction_new_PROSER_selecter_OutputDir = ROOT_PATH + "/data/learning_result/attribute_prediction_new/PROSER"
+
 # link_prediction_new
 Model_link_prediction_new_Baseline_mix_InputDir = MakeSample_link_prediction_new_Baseline_OutputDir + "/mix"
 Model_link_prediction_new_Baseline_learning_InputDir = MakeSample_link_prediction_new_Baseline_OutputDir + "/learning"
@@ -124,6 +129,10 @@ Model_link_prediction_new_FNN_mix_InputDir = MakeSample_link_prediction_new_FNN_
 Model_link_prediction_new_FNN_learning_InputDir = MakeSample_link_prediction_new_FNN_OutputDir + "/learning"
 Model_link_prediction_new_FNN_inference_InputDir = MakeSample_link_prediction_new_FNN_OutputDir + "/inference"
 
+Model_link_prediction_new_PROSER_mix_InputDir = MakeSample_link_prediction_new_PROSER_OutputDir + "/mix"
+Model_link_prediction_new_PROSER_learning_InputDir = MakeSample_link_prediction_new_PROSER_OutputDir + "/learning"
+Model_link_prediction_new_PROSER_inference_InputDir = MakeSample_link_prediction_new_PROSER_OutputDir + "/inference"
+
 Model_link_prediction_new_COSSIMMLP_Baseline_mix_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/COSSIMMLP/Baseline/mix"
 Model_link_prediction_new_COSSIMMLP_Baseline_learning_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/COSSIMMLP/Baseline/learning"
 Model_link_prediction_new_COSSIMMLP_Baseline_inference_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/COSSIMMLP/Baseline/inference"
@@ -136,6 +145,41 @@ Model_link_prediction_new_COSSIMMLP_FNN_mix_OutputDir = ROOT_PATH + "/data/learn
 Model_link_prediction_new_COSSIMMLP_FNN_learning_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/COSSIMMLP/FNN/learning"
 Model_link_prediction_new_COSSIMMLP_FNN_inference_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/COSSIMMLP/FNN/inference"
 
+Model_link_prediction_new_COSSIMMLP_PROSER_mix_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/COSSIMMLP/PROSER/mix"
+Model_link_prediction_new_COSSIMMLP_PROSER_learning_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/COSSIMMLP/PROSER/learning"
+Model_link_prediction_new_COSSIMMLP_PROSER_inference_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/COSSIMMLP/PROSER/inference"
+
+Model_link_prediction_new_DEAL_Baseline_mix_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/DEAL/Baseline/mix"
+Model_link_prediction_new_DEAL_Baseline_learning_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/DEAL/Baseline/learning"
+Model_link_prediction_new_DEAL_Baseline_inference_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/DEAL/Baseline/inference"
+
+Model_link_prediction_new_DEAL_DeepMatchMax_mix_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/DEAL/DeepMatchMax/mix"
+Model_link_prediction_new_DEAL_DeepMatchMax_learning_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/DEAL/DeepMatchMax/learning"
+Model_link_prediction_new_DEAL_DeepMatchMax_inference_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/DEAL/DeepMatchMax/inference"
+
+Model_link_prediction_new_DEAL_FNN_mix_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/DEAL/FNN/mix"
+Model_link_prediction_new_DEAL_FNN_learning_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/DEAL/FNN/learning"
+Model_link_prediction_new_DEAL_FNN_inference_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/DEAL/FNN/inference"
+
+Model_link_prediction_new_DEAL_PROSER_mix_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/DEAL/PROSER/mix"
+Model_link_prediction_new_DEAL_PROSER_learning_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/DEAL/PROSER/learning"
+Model_link_prediction_new_DEAL_PROSER_inference_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/DEAL/PROSER/inference"
+
+Model_link_prediction_new_FNN_Baseline_mix_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/FNN/Baseline/mix"
+Model_link_prediction_new_FNN_Baseline_learning_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/FNN/Baseline/learning"
+Model_link_prediction_new_FNN_Baseline_inference_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/FNN/Baseline/inference"
+
+Model_link_prediction_new_FNN_DeepMatchMax_mix_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/FNN/DeepMatchMax/mix"
+Model_link_prediction_new_FNN_DeepMatchMax_learning_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/FNN/DeepMatchMax/learning"
+Model_link_prediction_new_FNN_DeepMatchMax_inference_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/FNN/DeepMatchMax/inference"
+
+Model_link_prediction_new_FNN_FNN_mix_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/FNN/FNN/mix"
+Model_link_prediction_new_FNN_FNN_learning_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/FNN/FNN/learning"
+Model_link_prediction_new_FNN_FNN_inference_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/FNN/FNN/inference"
+
+Model_link_prediction_new_FNN_PROSER_mix_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/FNN/PROSER/mix"
+Model_link_prediction_new_FNN_PROSER_learning_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/FNN/PROSER/learning"
+Model_link_prediction_new_FNN_PROSER_inference_OutputDir = ROOT_PATH + "/data/learning_result/link_prediction_new/FNN/PROSER/inference"
 
 # Evaluation IO dir
 # prediction_num_of_edge
@@ -198,6 +242,7 @@ Evaluation_node_prediction_lost_OutputDir = ROOT_PATH + "/data/result/node_predi
 Evaluation_attribute_prediction_new_Baseline_InputDir = Model_attribute_prediction_new_Baseline_OutputDir
 Evaluation_attribute_prediction_new_FNN_InputDir = Model_attribute_prediction_new_FNN_OutputDir
 Evaluation_attribute_prediction_new_DeepMatchMax_InputDir = Model_attribute_prediction_new_DeepMatchMax_OutputDir
+Evaluation_attribute_prediction_new_PROSER_selecter_InputDir = Model_attribute_prediction_new_PROSER_selecter_OutputDir
 Evaluation_attribute_prediction_new_OutputDir = ROOT_PATH + "/data/result/attribute_prediction_new"
 
 # attribute_prediction_new_PROSER
@@ -216,6 +261,20 @@ Evaluation_link_prediction_new_COSSIMMLP_DeepMatchMax_inference_InputDir = Model
 Evaluation_link_prediction_new_COSSIMMLP_FNN_mix_InputDir = Model_link_prediction_new_COSSIMMLP_FNN_mix_OutputDir
 Evaluation_link_prediction_new_COSSIMMLP_FNN_learning_InputDir = Model_link_prediction_new_COSSIMMLP_FNN_learning_OutputDir
 Evaluation_link_prediction_new_COSSIMMLP_FNN_inference_InputDir = Model_link_prediction_new_COSSIMMLP_FNN_inference_OutputDir
+
+Evaluation_link_prediction_new_COSSIMMLP_PROSER_mix_InputDir = Model_link_prediction_new_COSSIMMLP_PROSER_mix_OutputDir
+Evaluation_link_prediction_new_COSSIMMLP_PROSER_learning_InputDir = Model_link_prediction_new_COSSIMMLP_PROSER_learning_OutputDir
+Evaluation_link_prediction_new_COSSIMMLP_PROSER_inference_InputDir = Model_link_prediction_new_COSSIMMLP_PROSER_inference_OutputDir
+
+Evaluation_link_prediction_new_DEAL_Baseline_inference_InputDir = Model_link_prediction_new_DEAL_Baseline_inference_OutputDir
+Evaluation_link_prediction_new_DEAL_FNN_inference_InputDir = Model_link_prediction_new_DEAL_FNN_inference_OutputDir
+Evaluation_link_prediction_new_DEAL_DeepMatchMax_inference_InputDir = Model_link_prediction_new_DEAL_DeepMatchMax_inference_OutputDir
+Evaluation_link_prediction_new_DEAL_PROSER_inference_InputDir = Model_link_prediction_new_DEAL_PROSER_inference_OutputDir
+
+Evaluation_link_prediction_new_FNN_Baseline_inference_InputDir = Model_link_prediction_new_FNN_Baseline_inference_OutputDir
+Evaluation_link_prediction_new_FNN_FNN_inference_InputDir = Model_link_prediction_new_FNN_FNN_inference_OutputDir
+Evaluation_link_prediction_new_FNN_DeepMatchMax_inference_InputDir = Model_link_prediction_new_FNN_DeepMatchMax_inference_OutputDir
+Evaluation_link_prediction_new_FNN_PROSER_inference_InputDir = Model_link_prediction_new_FNN_PROSER_inference_OutputDir
 
 Evaluation_link_prediction_new_OutputDir = ROOT_PATH + "/data/result/link_prediction_new"
 
@@ -238,8 +297,8 @@ prediction_num_of_edge_max_appeared = 0
 prediction_num_of_edge_min_appeared = 0
 prediction_num_of_edge_max_disappeared = 0
 prediction_num_of_edge_min_disappeared = 0
-prediction_num_of_edge_max_new = 68391
-prediction_num_of_edge_min_new = 12
+prediction_num_of_edge_max_new = 853
+prediction_num_of_edge_min_new = 0
 
 # prediction_num_of_node
 prediction_num_of_node_worker = 2
@@ -250,8 +309,8 @@ prediction_num_of_node_init_L = L
 prediction_num_of_node_niter = 1000
 prediction_num_of_node_patience = 100
 prediction_num_of_node_lr = 0.01
-prediction_num_of_node_max_new = 8871
-prediction_num_of_node_min_new = 17
+prediction_num_of_node_max_new = 1036
+prediction_num_of_node_min_new = 2
 prediction_num_of_node_max_lost = 0
 prediction_num_of_node_min_lost = 0
 
@@ -433,7 +492,8 @@ attribute_prediction_new_PROSER_batchSize = 1
 attribute_prediction_new_PROSER_state_dim = attribute_dim * 2
 attribute_prediction_new_PROSER_output_dim = 1
 attribute_prediction_new_PROSER_target_idx = 4 # idx of percentile (min, 25, 50, 75, max)
-attribute_prediction_new_PROSER_threshold = 0.996990278734766 # threshold of max
+attribute_prediction_new_PROSER_threshold = 0.996503825224748#0.996990278734766 # threshold of max
+attribute_prediction_new_PROSER_drop_percentile = 4 #10 # validデータでmeanが最大となるパーセンタイル (確率の上位90%は予測集合に加える)
 attribute_prediction_new_PROSER_init_L = L
 attribute_prediction_new_PROSER_niter = 1000
 attribute_prediction_new_PROSER_patience = 10
@@ -447,6 +507,7 @@ link_prediction_new_annotation_dim = attribute_dim
 link_prediction_new_output_dim = all_node_num + n_expanded
 link_prediction_new_init_L = L
 link_prediction_new_niter = 1
+link_prediction_new_niter_FNN = 100
 link_prediction_new_n_steps = 5
 link_prediction_new_patience = 3
 link_prediction_new_lr = 0.01

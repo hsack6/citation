@@ -13,12 +13,13 @@ def train(epoch, dataloader, net, criterion, optimizer, opt):
         output = net(input)
 
         for batch in range(opt.batchSize):
-            loss = 0
-            for _ in range(input_num[batch]/16):
+            loss = []
+            for _ in range(int(input_num[batch]//16)):
                 n = [random.randint(0, input_num[batch]-1) for _ in range(16)]
-                loss += criterion(output[batch, n, 0], label[batch, n, opt.target_idx])
-                loss.backward(retain_graph=True)
-                optimizer.step()
+                loss.append(criterion(output[batch, n, 0], label[batch, n, opt.target_idx]))
+            loss = sum(loss)
+            loss.backward()
+            optimizer.step()
 
         loss = 0
         for batch in range(opt.batchSize):

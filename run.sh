@@ -39,6 +39,7 @@ WORK_PATH=$(pwd)
 #cd $WORK_PATH/MakeSample
 #python confirm_n_expanded.py # 標準出力されるn_expandedをsetting_paramに記入
 #============================================= 3 =============================================
+# citationでは使わない
 #cd $WORK_PATH/MakeSample
 #python link_prediction_appeared.py
 #cd $WORK_PATH/Model/confirm_max_nnz_am/print_max_nnz_am/
@@ -52,17 +53,22 @@ WORK_PATH=$(pwd)
 #python main.py
 #cd $WORK_PATH/Model/attribute_prediction_new/DeepMatchMax
 #python main.py
-#cd $WORK_PATH/Evaluation
-#python attribute_prediction_new.py
+#cd $WORK_PATH/Model/attribute_prediction_new_PROSER
+#python attribute_prediction_new_PROSER_oracle.py # ここで一旦止める、result_oracle_train_valid.csvを確認してGain(mean)が最大となるThresholdをsetting_paramに記入する
 #cd $WORK_PATH/MakeSample
 #python attribute_prediction_new_PROSER.py
-cd $WORK_PATH/Model/attribute_prediction_new_PROSER/FNN
-python main.py
-cd $WORK_PATH/Evaluation
-python attribute_prediction_new_PROSER.py
+#cd $WORK_PATH/Model/attribute_prediction_new_PROSER/FNN
+#python main.py
+#cd $WORK_PATH/Evaluation
+#python attribute_prediction_new_PROSER.py # ここで一旦止める、result_oracle_valid.csv (ファイル名ミス、実際oracleじゃない)を確認してGain(mean)が最大となる行番号をsetting_paramのdrop_percentileに記入する
+#cd $WORK_PATH/Model/attribute_prediction_new_PROSER/
+#python selecter.py
+#cd $WORK_PATH/Evaluation
+#python attribute_prediction_new.py
+
 #============================================= 5 =============================================
-#cd $WORK_PATH/MakeSample
-#python link_prediction_new.py
+cd $WORK_PATH/MakeSample
+python link_prediction_new.py
 #python link_prediction_disappeared.py
 #python node_prediction_lost.py
 #============================================= 6 =============================================
@@ -87,18 +93,31 @@ python attribute_prediction_new_PROSER.py
 #python node_prediction_lost.py
 
 #link_prediction_new学習&評価
-#cd $WORK_PATH/Model/link_prediction_new/COSSIMMLP
+cd $WORK_PATH/Model/link_prediction_new/COSSIMMLP
 #python main.py Baseline mix
 #python main.py Baseline learning
-#python main.py Baseline inference
+python main.py Baseline inference
 #python main.py FNN mix
 #python main.py FNN learning
-#python main.py FNN inference
+python main.py FNN inference
 #python main.py DeepMatchMax mix
 #python main.py DeepMatchMax learning
-#python main.py DeepMatchMax inference
-#cd $WORK_PATH/Evaluation
-#python link_prediction_new.py
+python main.py DeepMatchMax inference
+#python main.py PROSER mix
+#python main.py PROSER learning
+python main.py PROSER inference
+cd $WORK_PATH/Model/link_prediction_new/DEAL
+python main.py Baseline inference
+python main.py FNN inference
+python main.py DeepMatchMax inference
+python main.py PROSER inference
+cd $WORK_PATH/Model/link_prediction_new/FNN
+python main.py Baseline inference
+python main.py FNN inference
+python main.py DeepMatchMax inference
+python main.py PROSER inference
+cd $WORK_PATH/Evaluation
+python link_prediction_new.py
 
 #link_prediction_appearedの学習&評価
 #cd $WORK_PATH/Model/link_prediction_appeared/Baseline
