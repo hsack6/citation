@@ -67,8 +67,8 @@ WORK_PATH=$(pwd)
 #python attribute_prediction_new.py
 
 #============================================= 5 =============================================
-cd $WORK_PATH/MakeSample
-python link_prediction_new.py
+#cd $WORK_PATH/MakeSample
+#python link_prediction_new.py
 #python link_prediction_disappeared.py
 #python node_prediction_lost.py
 #============================================= 6 =============================================
@@ -93,31 +93,31 @@ python link_prediction_new.py
 #python node_prediction_lost.py
 
 #link_prediction_new学習&評価
-cd $WORK_PATH/Model/link_prediction_new/COSSIMMLP
+#cd $WORK_PATH/Model/link_prediction_new/COSSIMMLP
 #python main.py Baseline mix
 #python main.py Baseline learning
-python main.py Baseline inference
+#python main.py Baseline inference
 #python main.py FNN mix
 #python main.py FNN learning
-python main.py FNN inference
+#python main.py FNN inference
 #python main.py DeepMatchMax mix
 #python main.py DeepMatchMax learning
-python main.py DeepMatchMax inference
+#python main.py DeepMatchMax inference
 #python main.py PROSER mix
 #python main.py PROSER learning
-python main.py PROSER inference
-cd $WORK_PATH/Model/link_prediction_new/DEAL
-python main.py Baseline inference
-python main.py FNN inference
-python main.py DeepMatchMax inference
-python main.py PROSER inference
-cd $WORK_PATH/Model/link_prediction_new/FNN
-python main.py Baseline inference
-python main.py FNN inference
-python main.py DeepMatchMax inference
-python main.py PROSER inference
-cd $WORK_PATH/Evaluation
-python link_prediction_new.py
+#python main.py PROSER inference
+#cd $WORK_PATH/Model/link_prediction_new/DEAL
+#python main.py Baseline inference
+#python main.py FNN inference
+#python main.py DeepMatchMax inference
+#python main.py PROSER inference
+#cd $WORK_PATH/Model/link_prediction_new/FNN
+#python main.py Baseline inference
+#python main.py FNN inference
+#python main.py DeepMatchMax inference
+#python main.py PROSER inference
+#cd $WORK_PATH/Evaluation
+#python link_prediction_new.py
 
 #link_prediction_appearedの学習&評価
 #cd $WORK_PATH/Model/link_prediction_appeared/Baseline
@@ -159,3 +159,70 @@ python link_prediction_new.py
 #cd $WORK_PATH/Evaluation
 #python link_prediction_disappeared.py
 
+# repeat
+#cd $WORK_PATH/MakeSample
+#python repeat1_link_prediction_new.py
+#python repeat1_attribute_prediction_new.py
+#cd $WORK_PATH/MakeSample/DynGEM_repeat1
+#python utilize_new_attribute_link.py
+
+#cd $WORK_PATH/Model/confirm_max_nnz_am/print_max_nnz_am/
+#python main.py # 標準出力されるmax_nnz_am_expandedをsetting_paramに記入
+
+#repeat1_link_prediction_new_utilize_new_attribute_linkの学習&評価
+#cd $WORK_PATH/Model/repeat1_link_prediction_new_utilize_new_attribute_link/Baseline
+#python main.py
+#cd $WORK_PATH/Model/repeat1_link_prediction_new_utilize_new_attribute_link/COSSIMMLP
+#python main.py
+#cd $WORK_PATH/Model/repeat1_link_prediction_new_utilize_new_attribute_link/EGCNh
+#python main.py
+#cd $WORK_PATH/Model/repeat1_link_prediction_new_utilize_new_attribute_link/EGCNo
+#python main.py
+#cd $WORK_PATH/Model/repeat1_link_prediction_new_utilize_new_attribute_link/GCN
+#python main.py
+#cd $WORK_PATH/Model/repeat1_link_prediction_new_utilize_new_attribute_link/Random
+#python main.py
+#cd $WORK_PATH/Model/repeat1_link_prediction_new_utilize_new_attribute_link/STGCN
+#python main.py
+#cd $WORK_PATH/Model/repeat1_link_prediction_new_utilize_new_attribute_link/STGGNN
+#python main.py
+#cd $WORK_PATH/Model/repeat1_link_prediction_new_utilize_new_attribute_link/DynGEM
+#python main.py
+#cd $WORK_PATH/Model/repeat1_link_prediction_new_utilize_new_attribute_link/LSTM
+#python main.py
+#cd $WORK_PATH/Evaluation
+#python repeat1_link_prediction_new_utilize_new_attribute_link.py
+
+# repeat1_attribute_prediction_new_utilize_new_attribute_link学習
+#cd $WORK_PATH/Model/repeat1_attribute_prediction_new_utilize_new_attribute_link/Baseline
+#python main.py
+#cd $WORK_PATH/Model/repeat1_attribute_prediction_new_utilize_new_attribute_link/EGCNh
+#python main.py
+#cd $WORK_PATH/Model/repeat1_attribute_prediction_new_utilize_new_attribute_link/EGCNo
+#python main.py
+#cd $WORK_PATH/Model/repeat1_attribute_prediction_new_utilize_new_attribute_link/GCN
+#python main.py
+#cd $WORK_PATH/Model/repeat1_attribute_prediction_new_utilize_new_attribute_link/LSTM
+#python main.py
+#cd $WORK_PATH/Model/repeat1_attribute_prediction_new_utilize_new_attribute_link/STGCN
+#python main.py
+#cd $WORK_PATH/Model/repeat1_attribute_prediction_new_utilize_new_attribute_link/STGGNN
+#python main.py
+#cd $WORK_PATH/Model/repeat1_attribute_prediction_new_utilize_new_attribute_link/DynGEM
+#python main.py
+#cd $WORK_PATH/Model/repeat1_attribute_prediction_new_utilize_new_attribute_link/FNN
+#python main.py
+#cd $WORK_PATH/Evaluation
+#python repeat1_attribute_prediction_new_utilize_new_attribute_link.py
+
+# repeat1_link_prediction_new_AGATE
+#cd $WORK_PATH/MakeSample
+#python repeat1_link_prediction_new_AGATE.py
+#cd $WORK_PATH/Model/repeat1_link_prediction_new_AGATE/COSSIMMLP
+#python main.py
+#cd $WORK_PATH/Model/repeat1_link_prediction_new_AGATE/FNN
+#python main.py
+cd $WORK_PATH/Model/repeat1_link_prediction_new_AGATE/DEAL
+python main.py
+cd $WORK_PATH/Evaluation
+python repeat1_link_prediction_new_AGATE.py

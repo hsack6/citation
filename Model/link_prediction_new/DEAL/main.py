@@ -199,21 +199,21 @@ from setting_param import n_expanded
 opt.n_node = all_node_num + n_expanded
 
 
-train_dataset = BADataset(opt.dataroot, opt.L, True, False, False)
-train_dataloader = BADataloader(train_dataset, batch_size=opt.batchSize, \
-                                  shuffle=True, num_workers=opt.workers, drop_last=True)
+# train_dataset = BADataset(opt.dataroot, opt.L, True, False, False)
+# train_dataloader = BADataloader(train_dataset, batch_size=opt.batchSize, \
+#                                   shuffle=True, num_workers=opt.workers, drop_last=True)
 
 # valid_dataset = BADataset(opt.dataroot, opt.L, False, True, False)
 # valid_dataloader = BADataloader(valid_dataset, batch_size=opt.batchSize, \
 #                                  shuffle=True, num_workers=opt.workers, drop_last=True)
 
-test_dataset = BADataset(opt.dataroot, opt.L, False, False, True)
-test_dataloader = BADataloader(test_dataset, batch_size=opt.batchSize, \
-                                 shuffle=False, num_workers=opt.workers, drop_last=True)
+# test_dataset = BADataset(opt.dataroot, opt.L, False, False, True)
+# test_dataloader = BADataloader(test_dataset, batch_size=opt.batchSize, \
+#                                  shuffle=False, num_workers=opt.workers, drop_last=True)
 
-# all_dataset = BADataset(opt.dataroot, opt.L, False, False, False)
-# all_dataloader = BADataloader(all_dataset, batch_size=opt.batchSize, \
-#                                  shuffle=False, num_workers=opt.workers, drop_last=False)
+all_dataset = BADataset(opt.dataroot, opt.L, False, False, False)
+all_dataloader = BADataloader(all_dataset, batch_size=opt.batchSize, \
+                                 shuffle=False, num_workers=opt.workers, drop_last=False)
 
 device = torch.device('cuda:' + str(opt.cuda) if opt.gpu else 'cpu')
 net = DEAL(opt.output_dim, opt.annotation_dim, all_node_num, device, opt, locals()[opt.attr_model])
@@ -223,9 +223,9 @@ print(net)
 if opt.cuda:
     net.cuda()
 
-optimizer = torch.optim.Adam(net.parameters(), lr=opt.lr)
+# optimizer = torch.optim.Adam(net.parameters(), lr=opt.lr)
 
 os.makedirs(OutputDir, exist_ok=True)
-train(train_dataloader, net, optimizer, opt, OutputDir)
+# train(train_dataloader, net, optimizer, opt, OutputDir)
 net.load_state_dict(torch.load(OutputDir + '/checkpoint.pt'))
-inference(test_dataloader, net, opt, OutputDir)
+inference(all_dataloader, net, opt, OutputDir)
